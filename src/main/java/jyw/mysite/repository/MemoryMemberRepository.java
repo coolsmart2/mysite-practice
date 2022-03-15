@@ -3,15 +3,12 @@ package jyw.mysite.repository;
 import jyw.mysite.domain.Member;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class MemoryMemberRepository implements MemberRepository{
 
-    private Map<Long, Member> members = new HashMap<>();
+    private final Map<Long, Member> members = new HashMap<>();
     private Long sequence = 0L;
 
     @Override
@@ -23,16 +20,26 @@ public class MemoryMemberRepository implements MemberRepository{
 
     @Override
     public Optional<Member> findById(Long id) {
-        return Optional. members.get(id)
+        return Optional.ofNullable(members.get(id));
     }
 
     @Override
     public List<Member> findAll() {
-        return null;
+        return new ArrayList<>(members.values());
     }
 
     @Override
     public List<Member> findByLoginId(String LoginId) {
-        return null;
+        List<Member> findMember = new ArrayList<>();
+        for (Member member : members.values()) {
+            if (member.getLoginId().equals(LoginId)) {
+                findMember.add(member);
+            }
+        }
+        return findMember;
+    }
+
+    public void clear() {
+        members.clear();
     }
 }

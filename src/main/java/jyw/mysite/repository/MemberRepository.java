@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MemberRepository {
-    public Member save(Member member);
+    Member save(Member member);
 
-    public Optional<Member> findById(Long id);
+    Optional<Member> findById(Long id);
 
-    public List<Member> findAll();
+    List<Member> findAll();
 
-    public List<Member> findByLoginId(String LoginId);
+    List<Member> findByLoginId(String LoginId);
 }

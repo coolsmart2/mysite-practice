@@ -5,20 +5,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Member {
-
-    private Long id;
+public class MemberLoginForm {
     private String loginId;
     private String password;
 
-    public Member(String loginId, String password) {
-        this.loginId = loginId;
-        this.password = password;
-    }
-
     @Override
     public String toString() {
-        return "Member{" +
+        return "MemberLoginForm{" +
                 "loginId='" + loginId + '\'' +
                 ", password='" + password + '\'' +
                 '}';
