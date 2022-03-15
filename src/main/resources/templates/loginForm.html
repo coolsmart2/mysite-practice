@@ -1,14 +1,33 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Login</title>
     <meta charset="utf-8">
+    <title>Login</title>
+    <style>
+        .login-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
 </head>
 <body>
-    <h2>로그인</h2>
-    <form method="post">
-        <div><input type="text" name="loginId"></div>
-        <div><input type="password" name="password"></div>
+    <h2><a href="/">로그인</a></h2>
+    <form method="post" th:action th:object="${loginForm}">
+        <div>
+            <input type="text" placeholder="아이디" th:field="*{loginId}">
+            <span class="field-error" th:errors="*{loginId}">아이디 예외</span>
+        </div>
+        <div>
+            <input type="password" placeholder="비밀번호" th:field="*{password}">
+            <span class="field-error" th:errors="*{password}">비밀번호 예외</span>
+        </div>
+        <div th:if="${#fields.hasGlobalErrors()}">
+            <p class="login-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">전체 오류 메세지</p>
+        </div>
         <button type="submit">로그인</button>
     </form>
 </body>

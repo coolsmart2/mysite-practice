@@ -15,11 +15,13 @@ public class LoginService {
 
     private final MemberRepository memberRepository;
 
-    public boolean loginMember(Member member) {
+    public Member loginMember(Member member) {
         List<Member> findMember = memberRepository.findByLoginId(member.getLoginId());
         if (!findMember.isEmpty()) {
-            return findMember.get(0).getPassword().equals(member.getPassword());
+            if (findMember.get(0).getPassword().equals(member.getPassword())) {
+                return findMember.get(0);
+            }
         }
-        return false;
+        return null;
     }
 }
