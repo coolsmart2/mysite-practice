@@ -16,13 +16,13 @@
 </head>
 <body>
     <h2><a href="/">로그인</a></h2>
-    <form method="post" th:action th:object="${loginForm}">
+    <form method="post" th:action th:object="${form}">
         <div>
-            <input type="text" placeholder="아이디" th:field="*{loginId}">
-            <span class="field-error" th:errors="*{loginId}">아이디 예외</span>
+            <input type="text" placeholder="아이디" maxlength="20" th:field="*{loginId}">
+            <span class="field-error" th:errors="*{loginId}">필수</span>
         </div>
         <div>
-            <input type="password" placeholder="비밀번호" th:field="*{password}">
+            <input type="password" placeholder="비밀번호" maxlength="20" th:field="*{password}">
             <span class="field-error" th:errors="*{password}">비밀번호 예외</span>
         </div>
         <div th:if="${#fields.hasGlobalErrors()}">

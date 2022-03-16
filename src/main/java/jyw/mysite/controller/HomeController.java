@@ -7,10 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 @Controller
 @RequiredArgsConstructor
@@ -19,14 +16,8 @@ public class HomeController {
     private final MemberService memberService;
 
     @GetMapping("/")
-    public String home(HttpServletRequest request, Model model) {
+    public String home(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long memberId, Model model) {
 
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            return "home";
-        }
-
-        Long memberId = (Long) session.getAttribute(SessionConst.LOGIN_MEMBER);
         if (memberId == null) {
             return "home";
         }

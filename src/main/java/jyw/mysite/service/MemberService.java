@@ -24,6 +24,10 @@ public class MemberService {
         return null;
     }
 
+    public Member join(Member member) {
+        return memberRepository.save(member);
+    }
+
     public Member findOneById(Long id) {
         Optional<Member> findMember = memberRepository.findById(id);
         return findMember.orElse(null);

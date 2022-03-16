@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,6 +33,17 @@ class MemoryMemberRepositoryTest {
 //        }
 
         findMember.ifPresent(value -> Assertions.assertThat(value.getLoginId()).isEqualTo(member.getLoginId()));
+    }
+
+    @Test
+    void 로그인아이디로회원찾기() {
+        Member member = new Member("test", "1111");
+        memberRepository.save(member);
+
+        List<Member> byLoginId = memberRepository.findByLoginId("test2");
+        if (!byLoginId.isEmpty()) {
+            Assertions.assertThat(byLoginId.get(0)).isEqualTo(null);
+        }
     }
 
 }
