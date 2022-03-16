@@ -14,6 +14,16 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
+    public Member loginMember(Member member) {
+        List<Member> findMember = memberRepository.findByLoginId(member.getLoginId());
+        if (!findMember.isEmpty()) {
+            if (findMember.get(0).getPassword().equals(member.getPassword())) {
+                return findMember.get(0);
+            }
+        }
+        return null;
+    }
+
     public Member findOneById(Long id) {
         Optional<Member> findMember = memberRepository.findById(id);
         return findMember.orElse(null);

@@ -14,15 +14,12 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/")
 public class HomeController {
 
     private final MemberService memberService;
 
-    @GetMapping
+    @GetMapping("/")
     public String home(HttpServletRequest request, Model model) {
-
-        System.out.println("home");
 
         HttpSession session = request.getSession(false);
         if (session == null) {
