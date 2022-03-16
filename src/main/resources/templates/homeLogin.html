@@ -6,8 +6,8 @@
 </head>
 <body>
     <h1>MYSITE</h1>
-    <a href="/login">로그인</a>
-    <a href="/sign-up">회원가입</a>
+    <a th:text="${member.loginId}">사용자</a><a>님</a>
+    <a href="/logout">로그아웃</a>
     <ul>
         <li>게시글1</li>
         <li>게시글2</li>

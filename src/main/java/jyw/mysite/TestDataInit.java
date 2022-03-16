@@ -17,7 +17,7 @@ public class TestDataInit {
 
     @PostConstruct
     public void init() {
-        Member member = new Member("test", "1111");
+        Member member = new Member("test", "1111!");
         memberRepository.save(member);
         log.info("init member={}", member);
         log.info("members={}", memberRepository.findAll());
