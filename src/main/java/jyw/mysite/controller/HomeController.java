@@ -1,7 +1,10 @@
 package jyw.mysite.controller;
 
 import jyw.mysite.domain.Member;
+import jyw.mysite.domain.Post;
+import jyw.mysite.domain.PostHome;
 import jyw.mysite.service.MemberService;
+import jyw.mysite.service.PostService;
 import jyw.mysite.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -14,9 +17,12 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 public class HomeController {
 
     private final MemberService memberService;
+    private final PostService postService;
 
     @GetMapping("/")
     public String home(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long memberId, Model model) {
+
+        postService.postsToModel(model);
 
         if (memberId == null) {
             return "home";

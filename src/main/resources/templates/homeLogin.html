@@ -3,18 +3,35 @@
 <head>
     <title>Home</title>
     <meta charset="utf-8">
+    <style>
+        table {
+            width: 500px;
+        }
+        th, td {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <h1>MYSITE</h1>
+    <h1><a href="/">MYSITE</a></h1>
+    <hr>
     <a th:text="${member.loginId}">사용자</a><a>님</a>
     <a href="/logout">로그아웃</a>
-    <ul>
-        <li>게시글1</li>
-        <li>게시글2</li>
-        <li>게시글3</li>
-        <li>게시글4</li>
-        <li>게시글5</li>
-    </ul>
-    <a href="/new-post">글쓰기</a>
+    <hr>
+    <table>
+        <thead>
+        <tr>
+            <th>제목</th>
+            <th>작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="postHome : ${postHomes}">
+            <td th:text="${postHome.title}">게시글</td>
+            <td th:text="${postHome.dateTime}">작성일</td>
+        </tr>
+        </tbody>
+    </table>
+    <a href="/write">글쓰기</a>
 </body>
 </html>

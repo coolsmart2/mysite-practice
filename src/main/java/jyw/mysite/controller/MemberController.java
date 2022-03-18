@@ -43,7 +43,7 @@ public class MemberController {
         Member member = memberService.loginMember(new Member(loginForm.getLoginId(), loginForm.getPassword()));
         if (member == null) {
             bindingResult.reject("loginFail");
-            log.info("bindingResult={}", bindingResult);
+//            log.info("bindingResult={}", bindingResult);
             return "loginForm";
         }
 
@@ -73,9 +73,8 @@ public class MemberController {
     }
 
     @PostMapping("/sign-up")
-    public String signUp(@Validated @ModelAttribute("form") MemberSignUpForm signUpForm, BindingResult bindingResult, Model errModel) {
+    public String signUp(@Validated @ModelAttribute("form") MemberSignUpForm signUpForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-//            log.info("bindingResult = {}", bindingResult.getFieldError());
             return "signUpForm";
         }
 
@@ -83,19 +82,13 @@ public class MemberController {
         String password = signUpForm.getPassword();
         String checkPassword = signUpForm.getCheckPassword();
 
-        log.info("loginId={}, password={}, checkPassword={}", loginId, password, checkPassword);
-
         // 아이디 중복 체크
         Member checkedLoginId = memberService.findOneByLoginId(loginId);
         if (checkedLoginId != null) {
             bindingResult.reject("loginIdDuplicate");
-            log.info("bindingResult = {}", bindingResult.getGlobalError());
-            log.info("loginIdDuplicate");
-//            errModel.addAttribute("loginIdDuplicate", )
             return "signUpForm";
         }
 
-        // 비밀번호 보안 체크 비밀번호 (숫자, 문자, 특수문자 포함 8 ~ 20자리 이내)
 //        Pattern pattern = Pattern.compile("^.*(?=^.{8,20}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$");
         int min = 4, max = 10;
 //        Pattern pattern = Pattern.compile("^.*(?=^.{" + min + "," + max + "}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$"); // 테스트로 조건 완화

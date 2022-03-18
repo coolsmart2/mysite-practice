@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Write Post</title>
+    <style>
+        .login-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <h1><a href="/">MYSITE</a></h1>
+    <form method="post" th:action th:object="${form}">
+        <hr>
+        <div>
+            <input type="text" placeholder="제목" maxlength="100" th:field="*{title}">
+            <span class="field-error" th:errors="*{title}">필수</span>
+        </div>
+        <hr>
+        <div>
+            <textarea cols="80" rows="10"th:field="*{content}"></textarea>
+            <span class="field-error" th:errors="*{content}">비밀번호 예외</span>
+        </div>
+        <button type="submit">제출</button>
+    </form>
+</body>
+</html>

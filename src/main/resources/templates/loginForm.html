@@ -15,7 +15,8 @@
     </style>
 </head>
 <body>
-    <h2><a href="/">로그인</a></h2>
+    <h1><a href="/">로그인</a></h1>
+    <hr>
     <form method="post" th:action th:object="${form}">
         <div>
             <input type="text" placeholder="아이디" maxlength="20" th:field="*{loginId}">
@@ -28,6 +29,7 @@
         <div th:if="${#fields.hasGlobalErrors()}">
             <p class="login-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">전체 오류 메세지</p>
         </div>
+        <hr>
         <button type="submit">로그인</button>
     </form>
 </body>

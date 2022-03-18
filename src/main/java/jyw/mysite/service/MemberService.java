@@ -41,4 +41,8 @@ public class MemberService {
         return null;
     }
 
+    public List<Member> findAll() {
+        return memberRepository.findAll();
+    }
+
 }
