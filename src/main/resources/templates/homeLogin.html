@@ -15,8 +15,11 @@
 <body>
     <h1><a href="/">MYSITE</a></h1>
     <hr>
-    <b><a th:text="${loginId}">사용자</a></b><a>님</a>
-    <a href="/logout">로그아웃</a>
+    <div>
+        <b th:text="${loginId}">사용자</b>
+        <a>님</a>
+        <a href="/logout">로그아웃</a>
+    </div>
     <hr>
     <table>
         <thead>
