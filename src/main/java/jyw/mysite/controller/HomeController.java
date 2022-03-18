@@ -28,9 +28,8 @@ public class HomeController {
             return "home";
         }
 
-        // 이렇게 꺼내오면 속도 느려지는거 아닌가?
-        Member member = memberService.findOneById(memberId);
-        model.addAttribute("member", member);
+        Member findMember = memberService.findOneById(memberId);
+        model.addAttribute("memberId", findMember.getLoginId());
 
         return "homeLogin";
     }

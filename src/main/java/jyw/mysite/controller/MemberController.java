@@ -3,23 +3,23 @@ package jyw.mysite.controller;
 import jyw.mysite.domain.Member;
 import jyw.mysite.domain.MemberLoginForm;
 import jyw.mysite.domain.MemberSignUpForm;
+import jyw.mysite.exception.CheckPwException;
+import jyw.mysite.exception.LoginIdException;
+import jyw.mysite.exception.PwPatternException;
+import jyw.mysite.repository.MemberConst;
 import jyw.mysite.service.MemberService;
 import jyw.mysite.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Slf4j
 @Controller
@@ -35,15 +35,12 @@ public class MemberController {
 
     @PostMapping("/login")
     public String login(@Validated @ModelAttribute("form") MemberLoginForm loginForm, BindingResult bindingResult, HttpServletRequest request) {
-        // 로그인 실패시 다시 로그인폼으로 로그인 성공시엔 홈파면으로 리다이렉트
         if (bindingResult.hasErrors()) {
-//            log.info("bindingResult = {}", bindingResult.getFieldError());
             return "loginForm";
         }
         Member member = memberService.loginMember(new Member(loginForm.getLoginId(), loginForm.getPassword()));
         if (member == null) {
             bindingResult.reject("loginFail");
-//            log.info("bindingResult={}", bindingResult);
             return "loginForm";
         }
 
@@ -52,7 +49,6 @@ public class MemberController {
 
         // server.servlet.session.tracking-modes=cookie
         // application.properties에다가 위의 설정을 해주지 않으면 홈화면에 "/" 말고 뒤에 세션 정보까지 같이 들어가 404 에러가 발생한다.
-
         return "redirect:/";
     }
 
@@ -77,39 +73,17 @@ public class MemberController {
         if (bindingResult.hasErrors()) {
             return "signUpForm";
         }
-
-        String loginId = signUpForm.getLoginId();
-        String password = signUpForm.getPassword();
-        String checkPassword = signUpForm.getCheckPassword();
-
-        // 아이디 중복 체크
-        Member checkedLoginId = memberService.findOneByLoginId(loginId);
-        if (checkedLoginId != null) {
+        try {
+            Member signUpMember = new Member(signUpForm.getLoginId(), signUpForm.getPassword());
+            memberService.joinAndSignUp(signUpMember, signUpForm.getCheckPassword());
+            return "redirect:/";
+        } catch (LoginIdException e) {
             bindingResult.reject("loginIdDuplicate");
-            return "signUpForm";
-        }
-
-//        Pattern pattern = Pattern.compile("^.*(?=^.{8,20}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$");
-        int min = 4, max = 10;
-//        Pattern pattern = Pattern.compile("^.*(?=^.{" + min + "," + max + "}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$"); // 테스트로 조건 완화
-        Pattern pattern = Pattern.compile("^.{" + min + "," + max + "}$"); // 테스트로 조건 완화
-        Matcher matcher = pattern.matcher(password);
-        if (!matcher.find()) {
-            bindingResult.reject("passwordOutOfPattern", new Object[]{min, max}, null);
-            log.info("passwordOutOfPattern");
-            return "signUpForm";
-        }
-
-        if (!signUpForm.getPassword().equals(checkPassword)) {
+        } catch (PwPatternException e) {
+            bindingResult.reject("passwordOutOfPattern", new Object[]{MemberConst.PASSWORD_MIN, MemberConst.PASSWORD_MAX}, null);
+        } catch (CheckPwException e) {
             bindingResult.reject("checkPasswordFail");
-            log.info("checkPasswordFail");
-            return "signUpForm";
         }
-
-        Member signUpMember = new Member(loginId, password);
-        memberService.join(signUpMember);
-
-        return "redirect:/";
-
+        return "signUpForm";
     }
 }

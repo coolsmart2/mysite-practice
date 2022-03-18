@@ -15,18 +15,20 @@
 <body>
     <h1><a href="/">MYSITE</a></h1>
     <hr>
-    <a th:text="${member.loginId}">사용자</a><a>님</a>
+    <b><a th:text="${memberId}">사용자</a></b><a>님</a>
     <a href="/logout">로그아웃</a>
     <hr>
     <table>
         <thead>
         <tr>
+            <th>번호</th>
             <th>제목</th>
             <th>작성일</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="postHome : ${postHomes}">
+            <td th:text="${postHome.id}">번호</td>
             <td th:text="${postHome.title}">게시글</td>
             <td th:text="${postHome.dateTime}">작성일</td>
         </tr>
