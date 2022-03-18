@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <title>Write Post</title>
+    <title>MYSITE - Write Post</title>
     <style>
         .login-error {
             border-color: #dc3545;
@@ -16,6 +16,12 @@
 </head>
 <body>
     <h1><a href="/">MYSITE</a></h1>
+
+    <hr>
+    <b><a th:text="${loginId}">사용자</a></b><a>님</a>
+    <a href="/logout">로그아웃</a>
+    <hr>
+
     <form method="post" th:action th:object="${form}">
         <hr>
         <div>

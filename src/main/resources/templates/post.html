@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="'MYSITE - ' + ${title}">Title</title>
+    <meta charset="utf-8">
+    <style>
+        table {
+            width: 500px;
+        }
+        th, td {
+            text-align: center;
+        }
+        p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<h1><a href="/">MYSITE</a></h1>
+<hr>
+<b><a th:text="${loginId}">사용자</a></b><a>님</a>
+<a href="/logout">로그아웃</a>
+<hr>
+<div th:text="${title}">제목</div>
+<hr>
+<div>
+    <th:block th:each="content : ${contents}">
+        <br th:if="${#strings.isEmpty(content)}" />
+        <p th:unless="${#strings.isEmpty(content)}" th:text="${content}"></p>
+    </th:block>
+</div>
+</body>
+</html>

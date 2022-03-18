@@ -8,6 +8,7 @@ import jyw.mysite.repository.MemberConst;
 import jyw.mysite.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.List;
 import java.util.Optional;

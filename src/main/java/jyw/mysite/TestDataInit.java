@@ -29,7 +29,7 @@ public class TestDataInit {
 
         for (int i = 0; i < 5; i++) {
             String title = "Hello " + i;
-            String content = "Woooooooooorld!" + i;
+            String content = "Woooooooooorld!";
             postRepository.save(new Post(member, LocalDateTime.now(), title, content));
         }
     }

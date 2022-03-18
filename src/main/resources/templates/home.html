@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Home</title>
+    <title>MYSITE - Home</title>
     <meta charset="utf-8">
     <style>
         table {
@@ -29,7 +29,9 @@
         <tbody>
             <tr th:each="postHome : ${postHomes}">
                 <td th:text="${postHome.id}">번호</td>
-                <td th:text="${postHome.title}">게시글</td>
+                <td>
+                    <a th:href="@{/post/{param1}(param1=${postHome.id})}" th:text="${postHome.title}">게시글</a>
+                </td>
                 <td th:text="${postHome.dateTime}">작성일</td>
             </tr>
         </tbody>

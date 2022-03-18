@@ -3,7 +3,6 @@ package jyw.mysite.controller;
 import jyw.mysite.domain.Member;
 import jyw.mysite.domain.Post;
 import jyw.mysite.domain.PostForm;
-import jyw.mysite.domain.PostHome;
 import jyw.mysite.service.MemberService;
 import jyw.mysite.service.PostService;
 import jyw.mysite.session.SessionConst;
@@ -13,13 +12,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 @Slf4j
 @Controller
@@ -30,7 +26,13 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/write")
-    public String postForm(@ModelAttribute("form") PostForm postForm) {
+    public String postForm(
+            @SessionAttribute(name = SessionConst.LOGIN_MEMBER) Long memberId,
+            @ModelAttribute("form") PostForm postForm,
+            Model model) {
+        Member findMember = memberService.findOneById(memberId);
+        model.addAttribute("loginId", findMember.getLoginId());
+
         return "postForm";
     }
 
@@ -38,7 +40,12 @@ public class PostController {
     public String newPost(
             @SessionAttribute(name = SessionConst.LOGIN_MEMBER) Long memberId,
             @Validated @ModelAttribute("form") PostForm postForm,
-            BindingResult bindingResult) {
+            BindingResult bindingResult,
+            Model model) {
+
+        Member findMember = memberService.findOneById(memberId);
+        model.addAttribute("loginId", findMember.getLoginId());
+
         if (bindingResult.hasErrors()) {
             return "postForm";
         }
@@ -48,5 +55,49 @@ public class PostController {
         postService.join(post);
 
         return "redirect:/";
+    }
+
+    @GetMapping("/post/{postId}")
+    public String showPost(
+            @PathVariable Long postId,
+            @SessionAttribute(name = SessionConst.LOGIN_MEMBER) Long memberId,
+            Model model) {
+
+        // 매번 화면에 사용자 정보를 이렇게 노가다로 구현해야 될까?
+        Member findMember = memberService.findOneById(memberId);
+        model.addAttribute("loginId", findMember.getLoginId());
+
+
+        Post findPost = postService.findOneById(postId);
+        model.addAttribute("title", findPost.getTitle());
+
+        // 긴 내용인 글 줄바꿈해주는 로직
+//        List<String> listContent = new ArrayList<>();
+//        String content = findPost.getContent();
+//        int interval = 100;
+//        int beginIndex = 0, endIndex = interval, contentLen = content.length();
+//        while (endIndex < contentLen) {
+//            listContent.add(content.substring(beginIndex, endIndex));
+//            beginIndex = endIndex;
+//            endIndex += interval;
+//        }
+//        listContent.add(content.substring(beginIndex));
+//        model.addAttribute("contents", listContent);
+
+//        StringBuilder sb = new StringBuilder(findPost.getContent());
+//        int index = 100, interval = 100;
+//        while (index < sb.length()) {
+//            sb.insert(index, "<br>");
+//            index += interval + "<br>".length();
+//        }
+//        model.addAttribute("content", sb.toString());
+
+//        String content = findPost.getContent().replace("\n", "<br>");
+
+        String[] contents = findPost.getContent().split("\n");
+
+        model.addAttribute("contents", contents);
+
+        return "post";
     }
 }
