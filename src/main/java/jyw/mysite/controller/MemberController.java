@@ -14,9 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -34,11 +32,16 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute("form") MemberLoginForm loginForm, BindingResult bindingResult, HttpServletRequest request) {
+    public String login(
+            @Validated @ModelAttribute("form") MemberLoginForm loginForm,
+            @RequestParam(defaultValue = "/") String redirectURL,
+            BindingResult bindingResult,
+            HttpServletRequest request
+    ) {
         if (bindingResult.hasErrors()) {
             return "loginForm";
         }
-        Member member = memberService.loginMember(new Member(loginForm.getLoginId(), loginForm.getPassword()));
+        Member member = memberService.checkLogin(new Member(loginForm.getLoginId(), loginForm.getPassword()));
         if (member == null) {
             bindingResult.reject("loginFail");
             return "loginForm";
@@ -49,7 +52,7 @@ public class MemberController {
 
         // server.servlet.session.tracking-modes=cookie
         // application.properties에다가 위의 설정을 해주지 않으면 홈화면에 "/" 말고 뒤에 세션 정보까지 같이 들어가 404 에러가 발생한다.
-        return "redirect:/";
+        return "redirect:" + redirectURL;
     }
 
     @GetMapping("/logout")
@@ -59,7 +62,6 @@ public class MemberController {
         if (session != null) {
             session.invalidate();
         }
-
         return "redirect:/";
     }
 
@@ -75,7 +77,7 @@ public class MemberController {
         }
         try {
             Member signUpMember = new Member(signUpForm.getLoginId(), signUpForm.getPassword());
-            memberService.joinAndSignUp(signUpMember, signUpForm.getCheckPassword());
+            memberService.joinAndValidate(signUpMember, signUpForm.getCheckPassword());
             return "redirect:/";
         } catch (LoginIdException e) {
             bindingResult.reject("loginIdDuplicate");

@@ -20,7 +20,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public Member loginMember(Member member) {
+    public Member checkLogin(Member member) {
         List<Member> findMember = memberRepository.findByLoginId(member.getLoginId());
         if (!findMember.isEmpty()) {
             if (findMember.get(0).getPassword().equals(member.getPassword())) {
@@ -34,7 +34,7 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-    public Member joinAndSignUp(Member member, String checkPassword) throws LoginIdException, PwPatternException, CheckPwException {
+    public Member joinAndValidate(Member member, String checkPassword) throws LoginIdException, PwPatternException, CheckPwException {
         validateDuplicateMember(member.getLoginId());
         validatePwPattern(member.getPassword());
         validateCheckPw(member.getPassword(), checkPassword);

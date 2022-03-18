@@ -8,6 +8,7 @@ import jyw.mysite.service.MemberService;
 import jyw.mysite.service.PostService;
 import jyw.mysite.session.SessionConst;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,11 +18,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class PostController {
@@ -38,11 +38,11 @@ public class PostController {
     public String newPost(
             @SessionAttribute(name = SessionConst.LOGIN_MEMBER) Long memberId,
             @Validated @ModelAttribute("form") PostForm postForm,
-            BindingResult bindingResult,
-            Model model) {
+            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "postForm";
         }
+
         Member postMember = memberService.findOneById(memberId);
         Post post = new Post(postMember, LocalDateTime.now(), postForm.getTitle(), postForm.getContent());
         postService.join(post);

@@ -1,8 +1,6 @@
 package jyw.mysite.controller;
 
 import jyw.mysite.domain.Member;
-import jyw.mysite.domain.Post;
-import jyw.mysite.domain.PostHome;
 import jyw.mysite.service.MemberService;
 import jyw.mysite.service.PostService;
 import jyw.mysite.session.SessionConst;
