@@ -38,6 +38,14 @@ public class MemoryPostRepository implements PostRepository {
         return findPost;
     }
 
+    @Override
+    public List<Post> findPage(int row, int page) {
+        List<Post> allPost = new ArrayList<>(posts.values());
+        int start = row * page;
+        int end = Math.min(row * page + row, allPost.size());
+        return allPost.subList(start, end);
+    }
+
     public void clear() {
         posts.clear();
     }

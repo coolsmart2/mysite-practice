@@ -15,7 +15,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 
 @Slf4j
 @Controller
@@ -71,31 +70,7 @@ public class PostController {
         Post findPost = postService.findOneById(postId);
         model.addAttribute("title", findPost.getTitle());
 
-        // 긴 내용인 글 줄바꿈해주는 로직
-//        List<String> listContent = new ArrayList<>();
-//        String content = findPost.getContent();
-//        int interval = 100;
-//        int beginIndex = 0, endIndex = interval, contentLen = content.length();
-//        while (endIndex < contentLen) {
-//            listContent.add(content.substring(beginIndex, endIndex));
-//            beginIndex = endIndex;
-//            endIndex += interval;
-//        }
-//        listContent.add(content.substring(beginIndex));
-//        model.addAttribute("contents", listContent);
-
-//        StringBuilder sb = new StringBuilder(findPost.getContent());
-//        int index = 100, interval = 100;
-//        while (index < sb.length()) {
-//            sb.insert(index, "<br>");
-//            index += interval + "<br>".length();
-//        }
-//        model.addAttribute("content", sb.toString());
-
-//        String content = findPost.getContent().replace("\n", "<br>");
-
         String[] contents = findPost.getContent().split("\n");
-
         model.addAttribute("contents", contents);
 
         return "post";

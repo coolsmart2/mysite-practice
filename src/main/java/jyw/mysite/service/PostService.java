@@ -19,6 +19,9 @@ public class PostService {
 
     private final PostRepository postRepository;
 
+    public final static int MAX_PAGE_INDEX = 10;
+
+
     public Post join(Post post) {
         return postRepository.save(post);
     }
@@ -40,8 +43,12 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    public void postsToModel(Model model) {
-        List<Post> posts = postRepository.findAll();
+    public int getTotalPage(int row) {
+        return postRepository.findAll().size() / MAX_PAGE_INDEX;
+    }
+
+    public void postsToModel(Model model, int row, int page) {
+        List<Post> posts = postRepository.findPage(row, page);
         List<PostHome> postHomes = new ArrayList<>();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 a h시 m분");
         for (Post post : posts) {

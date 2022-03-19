@@ -10,6 +10,9 @@
         th, td {
             text-align: center;
         }
+        .page-index {
+            margin-left: 9px;
+        }
     </style>
 </head>
 <body>
@@ -38,6 +41,15 @@
             </tr>
         </tbody>
     </table>
+    <hr>
+    <div>
+        <a class="page-index" th:if="${pageList.get(0) != 0}" th:text="|<<|" th:href="@{/?page=0}"></a>
+        <a class="page-index" th:if="${pageList.get(0) != 0}" th:text="|<|" th:href="@{/?page={page}(page=${pageList.get(0) - 1})}"></a>
+        <a class="page-index" th:each="page : ${pageList}" th:text="${page + 1}" th:href="@{/?page={page}(page=${page})}"></a>
+        <a class="page-index" th:if="${(pageList.get(pageList.size() - 1) + 1) != totalPage}" th:text="|>|" th:href="@{/?page={page}(page=${pageList.get(pageList.size() - 1) + 1})}"></a>
+        <a class="page-index" th:if="${(pageList.get(pageList.size() - 1) + 1) != totalPage}" th:text="|>>|" th:href="@{/?page={page}(page=${totalPage})}"></a>
+    </div>
+    <hr>
     <a href="/write">글쓰기</a>
 </body>
 </html>
