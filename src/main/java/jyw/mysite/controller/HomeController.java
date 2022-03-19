@@ -32,7 +32,24 @@ public class HomeController {
             @RequestParam(defaultValue = "10") int row,
             Model model) {
 
-        int totalPost = postService.getTotalPost(row); // 1001
+        setPostPage(page, row, model);
+        postService.postsToModel(model, row, page);
+
+        if (memberId == null) {
+            return "home";
+        }
+
+        Member findMember = memberService.findOneById(memberId);
+        model.addAttribute("loginId", findMember.getLoginId());
+
+        return "homeLogin";
+    }
+
+    private void setPostPage(int page, int row, Model model) {
+
+        // 머리 안 돌아가서 대충 짠 코드 리팩토링 필요함!!!
+
+        int totalPost = postService.getTotalPost(row); // 1012
         int totalPage = totalPost / PostService.MAX_PAGE_INDEX
                 + (int) Math.ceil((double) (totalPost % PostService.MAX_PAGE_INDEX) /  PostService.MAX_PAGE_INDEX);
         model.addAttribute("totalPage", totalPage); // 101
@@ -47,26 +64,10 @@ public class HomeController {
         int start = PostService.MAX_PAGE_INDEX * current;
         int end = Math.min(start + PostService.MAX_PAGE_INDEX, totalPage);
 
-        System.out.println("n = " + current);
-        System.out.println("start = " + start);
-        System.out.println("end = " + end);
-
         List<Integer> pageList = new ArrayList<>();
-
         for (int i = start; i < end; i++) {
             pageList.add(i + 1);
         }
         model.addAttribute("pageList", pageList);
-
-        postService.postsToModel(model, row, page);
-
-        if (memberId == null) {
-            return "home";
-        }
-
-        Member findMember = memberService.findOneById(memberId);
-        model.addAttribute("loginId", findMember.getLoginId());
-
-        return "homeLogin";
     }
 }
