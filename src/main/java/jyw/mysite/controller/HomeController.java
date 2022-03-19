@@ -28,30 +28,34 @@ public class HomeController {
     @GetMapping("/")
     public String home(
             @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long memberId,
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int row,
             Model model) {
 
-        int totalPage = postService.getTotalPage(row);
-        model.addAttribute("totalPage", totalPage);
+        int totalPost = postService.getTotalPost(row); // 1001
+        int totalPage = totalPost / PostService.MAX_PAGE_INDEX
+                + (int) Math.ceil((double) (totalPost % PostService.MAX_PAGE_INDEX) /  PostService.MAX_PAGE_INDEX);
+        model.addAttribute("totalPage", totalPage); // 101
 
-        log.info("totalPage={}", totalPage);
-
-
-        if (page >= totalPage) {
-            page = totalPage - 1;
+        if (page > totalPage) {
+            page = totalPage;
+        } else if (page < 1) {
+            page = 1;
         }
 
-        int n = page / PostService.MAX_PAGE_INDEX;
-        int start = PostService.MAX_PAGE_INDEX * n;
-        int end = Math.min(PostService.MAX_PAGE_INDEX * n + PostService.MAX_PAGE_INDEX, totalPage);
+        int current = (page - 1) / PostService.MAX_PAGE_INDEX;
+        int start = PostService.MAX_PAGE_INDEX * current;
+        int end = Math.min(start + PostService.MAX_PAGE_INDEX, totalPage);
+
+        System.out.println("n = " + current);
+        System.out.println("start = " + start);
+        System.out.println("end = " + end);
 
         List<Integer> pageList = new ArrayList<>();
 
         for (int i = start; i < end; i++) {
-            pageList.add(i);
+            pageList.add(i + 1);
         }
-
         model.addAttribute("pageList", pageList);
 
         postService.postsToModel(model, row, page);

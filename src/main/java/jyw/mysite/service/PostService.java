@@ -43,8 +43,8 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    public int getTotalPage(int row) {
-        return postRepository.findAll().size() / MAX_PAGE_INDEX;
+    public int getTotalPost(int row) {
+        return postRepository.findAll().size();
     }
 
     public void postsToModel(Model model, int row, int page) {
