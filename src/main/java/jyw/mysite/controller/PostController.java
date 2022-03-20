@@ -77,6 +77,12 @@ public class PostController {
             // 나중에 예외처리 페이지로 이동시킴
             return "error404";
         }
+
+        if (!Objects.equals(findMember.getId(), post.getMember().getId())) {
+            // 일단 홈화면으로 리다이렉트 향후 이전페이지로 리다이렉트할 수 있도록
+            return "redirect:/";
+        }
+
         postForm.setTitle(post.getTitle());
         postForm.setContent(post.getContent());
 
@@ -88,7 +94,6 @@ public class PostController {
             @SessionAttribute(name = SessionConst.LOGIN_MEMBER) Long memberId,
             @PathVariable Long postId,
             @ModelAttribute("form") PostForm postForm,
-            BindingResult bindingResult,
             Model model
     ) {
 
@@ -100,12 +105,6 @@ public class PostController {
         if (post == null) {
             // 나중에 예외처리 페이지로 이동시킴
             return "error404";
-        }
-
-        if (!Objects.equals(findMember.getId(), post.getMember().getId())) {
-            bindingResult.reject("editError");
-            // 일단 홈화면으로 리다이렉트 향후 이전페이지로 리다이렉트할 수 있도록
-            return "redirect:/";
         }
 
         post.setContent(postForm.getContent());
@@ -136,5 +135,12 @@ public class PostController {
         }
 
         return "post";
+    }
+
+    @GetMapping("/{postId}/delete")
+    public String deletePost(@PathVariable Long postId) {
+        Post findPost = postService.findOneById(postId);
+        postService.delete(findPost);
+        return "redirect:/";
     }
 }

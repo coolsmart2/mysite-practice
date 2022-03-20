@@ -57,6 +57,10 @@ public class MemoryPostRepository implements PostRepository {
         return allPost;
     }
 
+    @Override
+    public void remove(Post post) {
+        posts.remove(post.getId());
+    }
 
     public void clear() {
         posts.clear();

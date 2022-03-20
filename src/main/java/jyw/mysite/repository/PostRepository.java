@@ -16,4 +16,6 @@ public interface PostRepository {
     List<Post> findByMember(Member member);
 
     List<Post> findPage(int row, int page);
+
+    void remove(Post post);
 }

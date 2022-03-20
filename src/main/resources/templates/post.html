@@ -35,6 +35,7 @@
 <hr>
 <div>
     <a th:if="${canEdit}" th:href="@{/post/{param1}/edit(param1=${post.id})}">수정</a>
+    <a th:if="${canEdit}" th:href="@{/post/{param1}/delete(param1=${post.id})}">삭제</a>
     <a href="/">목록</a>
 </div>
 </body>

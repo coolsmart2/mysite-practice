@@ -58,4 +58,8 @@ public class PostService {
         }
         model.addAttribute("postHomes", postHomes);
     }
+
+    public void delete(Post post) {
+        postRepository.remove(post);
+    }
 }
