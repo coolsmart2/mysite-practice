@@ -35,8 +35,8 @@ public class MemberController {
     @PostMapping("/login")
     public String login(
             @Validated @ModelAttribute("form") MemberLoginForm loginForm,
-            @RequestParam(defaultValue = "/") String redirectURL,
             BindingResult bindingResult,
+            @RequestParam(defaultValue = "/") String redirectURL,
             HttpServletRequest request,
             Model model
     ) {
@@ -76,7 +76,10 @@ public class MemberController {
     }
 
     @PostMapping("/sign-up")
-    public String signUp(@Validated @ModelAttribute("form") MemberSignUpForm signUpForm, BindingResult bindingResult) {
+    public String signUp(
+            @Validated @ModelAttribute("form") MemberSignUpForm signUpForm,
+            BindingResult bindingResult
+    ) {
         if (bindingResult.hasErrors()) {
             return "signUpForm";
         }

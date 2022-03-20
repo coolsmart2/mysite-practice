@@ -54,7 +54,7 @@ public class PostService {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 a h시 m분");
         for (Post post : posts) {
             String formatTime = post.getLocalDateTime().format(dateTimeFormatter);
-            postHomes.add(new PostHome(post.getId(), post.getTitle(), formatTime));
+            postHomes.add(new PostHome(post.getId(), post.getMember().getLoginId(), post.getTitle(), formatTime));
         }
         model.addAttribute("postHomes", postHomes);
     }
