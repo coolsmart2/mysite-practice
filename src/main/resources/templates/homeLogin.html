@@ -19,7 +19,7 @@
     <h1><a href="/">MYSITE</a></h1>
     <hr>
     <div>
-        <b th:text="${loginId}">사용자</b>
+        <b th:text="${member.loginId}">사용자</b>
         <a>님</a>
         <a href="/logout">로그아웃</a>
     </div>
@@ -51,6 +51,6 @@
         <a class="page-index" th:if="${pageList.get(pageList.size() - 1) != totalPage}" th:text="|>>|" th:href="@{/?page={page}(page=${totalPage})}"></a>
     </div>
     <hr>
-    <a href="/write">글쓰기</a>
+    <a href="/post/write">글쓰기</a>
 </body>
 </html>

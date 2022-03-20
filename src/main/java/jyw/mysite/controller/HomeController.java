@@ -24,13 +24,15 @@ public class HomeController {
     private final MemberService memberService;
     private final PostService postService;
 
+    public final static String DOMAIN = "http://localhost:8080/";
 
     @GetMapping("/")
     public String home(
             @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Long memberId,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int row,
-            Model model) {
+            Model model
+    ) {
 
         setPostPage(page, row, model);
         postService.postsToModel(model, row, page);
@@ -40,7 +42,7 @@ public class HomeController {
         }
 
         Member findMember = memberService.findOneById(memberId);
-        model.addAttribute("loginId", findMember.getLoginId());
+        model.addAttribute("member", findMember);
 
         return "homeLogin";
     }

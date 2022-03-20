@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="'MYSITE - ' + ${title}">Title</title>
+    <title th:text="'MYSITE - ' + ${post.title}">Title</title>
     <meta charset="utf-8">
     <style>
         table {
@@ -19,18 +19,23 @@
 <h1><a href="/">MYSITE</a></h1>
 <hr>
 <div>
-    <b th:text="${loginId}">사용자</b>
+    <b th:text="${member.loginId}">사용자</b>
     <a>님</a>
     <a href="/logout">로그아웃</a>
 </div>
 <hr>
-<div><b th:text="${title}">제목</b></div>
+<div><b th:text="${post.title}">제목</b></div>
 <hr>
 <div>
     <th:block th:each="content : ${contents}">
         <br th:if="${#strings.isEmpty(content)}" />
         <p th:unless="${#strings.isEmpty(content)}" th:text="${content}"></p>
     </th:block>
+</div>
+<hr>
+<div>
+    <a th:href="@{/post/{param1}/edit(param1=${post.id})}">수정</a>
+    <a href="/">목록</a>
 </div>
 </body>
 </html>

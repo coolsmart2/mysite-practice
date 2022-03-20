@@ -12,6 +12,7 @@ import jyw.mysite.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,8 @@ public class MemberController {
             @Validated @ModelAttribute("form") MemberLoginForm loginForm,
             @RequestParam(defaultValue = "/") String redirectURL,
             BindingResult bindingResult,
-            HttpServletRequest request
+            HttpServletRequest request,
+            Model model
     ) {
         if (bindingResult.hasErrors()) {
             return "loginForm";
@@ -50,9 +52,12 @@ public class MemberController {
         HttpSession session = request.getSession();
         session.setAttribute(SessionConst.LOGIN_MEMBER, member.getId());
 
+        // 리다이렉트 되었는지 확인
+        model.addAttribute("redirect", true);
+
         // server.servlet.session.tracking-modes=cookie
         // application.properties에다가 위의 설정을 해주지 않으면 홈화면에 "/" 말고 뒤에 세션 정보까지 같이 들어가 404 에러가 발생한다.
-        return "redirect:" + redirectURL;
+        return "redirect:" + redirectURL/* + "?r=True"*/;
     }
 
     @GetMapping("/logout")

@@ -14,11 +14,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.LocalDateTime;
 
 @Slf4j
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/post")
 public class PostController {
 
     private final MemberService memberService;
@@ -28,9 +32,10 @@ public class PostController {
     public String postForm(
             @SessionAttribute(name = SessionConst.LOGIN_MEMBER) Long memberId,
             @ModelAttribute("form") PostForm postForm,
-            Model model) {
+            Model model
+    ) {
         Member findMember = memberService.findOneById(memberId);
-        model.addAttribute("loginId", findMember.getLoginId());
+        model.addAttribute("member", findMember);
 
         return "postForm";
     }
@@ -40,35 +45,78 @@ public class PostController {
             @SessionAttribute(name = SessionConst.LOGIN_MEMBER) Long memberId,
             @Validated @ModelAttribute("form") PostForm postForm,
             BindingResult bindingResult,
-            Model model) {
+            Model model
+    ) {
 
         Member findMember = memberService.findOneById(memberId);
-        model.addAttribute("loginId", findMember.getLoginId());
+        model.addAttribute("member", findMember);
 
         if (bindingResult.hasErrors()) {
             return "postForm";
         }
 
-        Member postMember = memberService.findOneById(memberId);
-        Post post = new Post(postMember, LocalDateTime.now(), postForm.getTitle(), postForm.getContent());
+        Post post = new Post(findMember, LocalDateTime.now(), postForm.getTitle(), postForm.getContent());
         postService.join(post);
 
-        return "redirect:/";
+        return "redirect:/post/" + post.getId();
     }
 
-    @GetMapping("/post/{postId}")
+    @GetMapping("/{postId}/edit")
+    public String editPostForm(
+            @SessionAttribute(name = SessionConst.LOGIN_MEMBER) Long memberId,
+            @PathVariable Long postId,
+            @ModelAttribute("form") PostForm postForm,
+            Model model
+    ) {
+        Member findMember = memberService.findOneById(memberId);
+        model.addAttribute("member", findMember);
+
+        Post post = postService.findOneById(postId);
+        if (post == null) {
+            // 나중에 예외처리 페이지로 이동시킴
+            return "error404";
+        }
+        postForm.setTitle(post.getTitle());
+        postForm.setContent(post.getContent());
+
+        return "postForm";
+    }
+
+    @PostMapping("/{postId}/edit")
+    public String editPost(
+            @SessionAttribute(name = SessionConst.LOGIN_MEMBER) Long memberId,
+            @PathVariable Long postId,
+            @ModelAttribute("form") PostForm postForm,
+            Model model
+    ) {
+
+        Member findMember = memberService.findOneById(memberId);
+        model.addAttribute("member", findMember);
+
+        Post post = postService.findOneById(postId);
+        if (post == null) {
+            // 나중에 예외처리 페이지로 이동시킴
+            return "error404";
+        }
+        post.setTitle(postForm.getTitle());
+        post.setContent(postForm.getContent());
+
+        return "redirect:/post/" + postId;
+    }
+
+    @GetMapping("/{postId}")
     public String showPost(
             @PathVariable Long postId,
             @SessionAttribute(name = SessionConst.LOGIN_MEMBER) Long memberId,
-            Model model) {
-
+            Model model,
+            HttpServletRequest request
+    ) {
         // 매번 화면에 사용자 정보를 이렇게 노가다로 구현해야 될까?
         Member findMember = memberService.findOneById(memberId);
-        model.addAttribute("loginId", findMember.getLoginId());
-
+        model.addAttribute("member", findMember);
 
         Post findPost = postService.findOneById(postId);
-        model.addAttribute("title", findPost.getTitle());
+        model.addAttribute("post", findPost);
 
         String[] contents = findPost.getContent().split("\n");
         model.addAttribute("contents", contents);
