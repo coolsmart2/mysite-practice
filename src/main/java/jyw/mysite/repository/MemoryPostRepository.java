@@ -1,7 +1,7 @@
 package jyw.mysite.repository;
 
-import jyw.mysite.domain.Member;
-import jyw.mysite.domain.Post;
+import jyw.mysite.domain.entity.Member;
+import jyw.mysite.domain.entity.Post;
 
 import java.util.*;
 
@@ -11,10 +11,10 @@ public class MemoryPostRepository implements PostRepository {
     private Long sequence = 0L;
 
     @Override
-    public Post save(Post post) {
+    public Long save(Post post) {
         posts.put(++sequence, post);
         post.setId(sequence);
-        return post;
+        return post.getId();
     }
 
     @Override
@@ -58,8 +58,8 @@ public class MemoryPostRepository implements PostRepository {
     }
 
     @Override
-    public void remove(Post post) {
-        posts.remove(post.getId());
+    public void deleteById(Long id) {
+        posts.remove(id);
     }
 
     public void clear() {

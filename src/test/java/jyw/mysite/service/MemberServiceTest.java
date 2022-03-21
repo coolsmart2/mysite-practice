@@ -1,11 +1,9 @@
 package jyw.mysite.service;
 
-import jyw.mysite.domain.Member;
+import jyw.mysite.domain.entity.Member;
 import jyw.mysite.repository.MemoryMemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class MemberServiceTest {
 

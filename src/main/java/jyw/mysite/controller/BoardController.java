@@ -1,8 +1,8 @@
 package jyw.mysite.controller;
 
-import jyw.mysite.domain.Member;
-import jyw.mysite.domain.Post;
-import jyw.mysite.domain.PostForm;
+import jyw.mysite.domain.entity.Member;
+import jyw.mysite.domain.entity.Post;
+import jyw.mysite.domain.form.PostForm;
 import jyw.mysite.service.MemberService;
 import jyw.mysite.service.PostService;
 import jyw.mysite.session.SessionConst;
@@ -14,9 +14,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -24,7 +21,7 @@ import java.util.Objects;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/post")
-public class PostController {
+public class BoardController {
 
     private final MemberService memberService;
     private final PostService postService;
@@ -100,14 +97,7 @@ public class PostController {
         Member findMember = memberService.findOneById(memberId);
         model.addAttribute("member", findMember);
 
-
-        Post post = postService.findOneById(postId);
-        if (post == null) {
-            // 나중에 예외처리 페이지로 이동시킴
-            return "error404";
-        }
-
-        post.setContent(postForm.getContent());
+        postService.editPost(postId, postForm);
 
         return "redirect:/post/" + postId;
     }
@@ -137,10 +127,10 @@ public class PostController {
         return "post";
     }
 
+    // DELETE Api 사용해서 restful 하게 설계해야 하는데 이건 프론트와 api로 통신할때 해당하는 거 겠지?
     @GetMapping("/{postId}/delete")
     public String deletePost(@PathVariable Long postId) {
-        Post findPost = postService.findOneById(postId);
-        postService.delete(findPost);
+        postService.delete(postId);
         return "redirect:/";
     }
 }

@@ -1,7 +1,6 @@
 package jyw.mysite.repository;
 
-import jyw.mysite.domain.Member;
-import org.springframework.stereotype.Repository;
+import jyw.mysite.domain.entity.Member;
 
 import java.util.*;
 
@@ -12,10 +11,10 @@ public class MemoryMemberRepository implements MemberRepository{
     private Long sequence = 0L;
 
     @Override
-    public Member save(Member member) {
+    public Long save(Member member) {
         members.put(++sequence, member);
         member.setId(sequence);
-        return member;
+        return member.getId();
     }
 
     @Override

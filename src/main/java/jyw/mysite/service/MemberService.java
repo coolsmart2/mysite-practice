@@ -1,6 +1,6 @@
 package jyw.mysite.service;
 
-import jyw.mysite.domain.Member;
+import jyw.mysite.domain.entity.Member;
 import jyw.mysite.exception.CheckPwException;
 import jyw.mysite.exception.LoginIdException;
 import jyw.mysite.exception.PwPatternException;
@@ -8,7 +8,7 @@ import jyw.mysite.repository.MemberConst;
 import jyw.mysite.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +21,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
+    @Transactional
     public Member checkLogin(Member member) {
         List<Member> findMember = memberRepository.findByLoginId(member.getLoginId());
         if (!findMember.isEmpty()) {
@@ -31,22 +32,26 @@ public class MemberService {
         return null;
     }
 
-    public Member join(Member member) {
+    @Transactional
+    public Long join(Member member) {
         return memberRepository.save(member);
     }
 
-    public Member joinAndValidate(Member member, String checkPassword) throws LoginIdException, PwPatternException, CheckPwException {
+    @Transactional
+    public Long joinAndValidate(Member member, String checkPassword) throws LoginIdException, PwPatternException, CheckPwException {
         validateDuplicateMember(member.getLoginId());
         validatePwPattern(member.getPassword());
         validateCheckPw(member.getPassword(), checkPassword);
         return memberRepository.save(member);
     }
 
+    @Transactional
     public Member findOneById(Long id) {
         Optional<Member> findMember = memberRepository.findById(id);
         return findMember.orElse(null);
     }
 
+    @Transactional
     public Member findOneByLoginId(String loginId) {
         List<Member> findMember = memberRepository.findByLoginId(loginId);
         if (!findMember.isEmpty()) {
@@ -55,6 +60,7 @@ public class MemberService {
         return null;
     }
 
+    @Transactional
     public List<Member> findAll() {
         return memberRepository.findAll();
     }

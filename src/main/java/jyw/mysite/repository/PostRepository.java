@@ -1,13 +1,16 @@
 package jyw.mysite.repository;
 
-import jyw.mysite.domain.Member;
-import jyw.mysite.domain.Post;
+import jyw.mysite.domain.entity.Member;
+import jyw.mysite.domain.entity.Post;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface PostRepository {
-    Post save(Post post);
+
+    int MAX_PAGE_INDEX = 10;
+
+    Long save(Post post);
 
     Optional<Post> findById(Long id);
 
@@ -17,5 +20,5 @@ public interface PostRepository {
 
     List<Post> findPage(int row, int page);
 
-    void remove(Post post);
+    void deleteById(Long id);
 }

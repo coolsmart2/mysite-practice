@@ -1,4 +1,4 @@
-package jyw.mysite.domain;
+package jyw.mysite.domain.form;
 
 import lombok.Getter;
 

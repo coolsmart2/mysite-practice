@@ -1,8 +1,8 @@
 package jyw.mysite.controller;
 
-import jyw.mysite.domain.Member;
-import jyw.mysite.domain.MemberLoginForm;
-import jyw.mysite.domain.MemberSignUpForm;
+import jyw.mysite.domain.entity.Member;
+import jyw.mysite.domain.form.MemberLoginForm;
+import jyw.mysite.domain.form.MemberSignUpForm;
 import jyw.mysite.exception.CheckPwException;
 import jyw.mysite.exception.LoginIdException;
 import jyw.mysite.exception.PwPatternException;

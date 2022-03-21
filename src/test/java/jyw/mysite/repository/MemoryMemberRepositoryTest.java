@@ -1,14 +1,12 @@
 package jyw.mysite.repository;
 
-import jyw.mysite.domain.Member;
+import jyw.mysite.domain.entity.Member;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class MemoryMemberRepositoryTest {
 

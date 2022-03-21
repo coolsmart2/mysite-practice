@@ -1,14 +1,9 @@
 package jyw.mysite.service;
 
-import jyw.mysite.domain.Member;
-import jyw.mysite.domain.Post;
+import jyw.mysite.domain.entity.Member;
 import jyw.mysite.repository.MemoryMemberRepository;
 import jyw.mysite.repository.MemoryPostRepository;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class PostServiceTest {
 
