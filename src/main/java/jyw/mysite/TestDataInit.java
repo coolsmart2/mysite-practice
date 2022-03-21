@@ -5,7 +5,7 @@ import jyw.mysite.domain.entity.Post;
 import jyw.mysite.repository.MemberRepository;
 import jyw.mysite.repository.PostRepository;
 import jyw.mysite.service.MemberService;
-import jyw.mysite.service.PostService;
+import jyw.mysite.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 public class TestDataInit {
 
     private final MemberService memberService;
-    private final PostService postService;
+    private final BoardService postService;
 
     @PostConstruct
     public void init() {

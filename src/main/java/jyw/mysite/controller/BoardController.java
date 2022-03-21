@@ -4,7 +4,7 @@ import jyw.mysite.domain.entity.Member;
 import jyw.mysite.domain.entity.Post;
 import jyw.mysite.domain.form.PostForm;
 import jyw.mysite.service.MemberService;
-import jyw.mysite.service.PostService;
+import jyw.mysite.service.BoardService;
 import jyw.mysite.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ import java.util.Objects;
 public class BoardController {
 
     private final MemberService memberService;
-    private final PostService postService;
+    private final BoardService postService;
 
     @GetMapping("/write")
     public String postForm(

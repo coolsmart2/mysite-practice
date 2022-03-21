@@ -3,7 +3,7 @@ package jyw.mysite.controller;
 import jyw.mysite.domain.entity.Member;
 import jyw.mysite.repository.PostRepository;
 import jyw.mysite.service.MemberService;
-import jyw.mysite.service.PostService;
+import jyw.mysite.service.BoardService;
 import jyw.mysite.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ import java.util.List;
 public class HomeController {
 
     private final MemberService memberService;
-    private final PostService postService;
+    private final BoardService postService;
 
     public final static String DOMAIN = "http://localhost:8080/";
 
