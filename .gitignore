@@ -38,3 +38,6 @@ out/
 
 ### DB info ###
 application.properties
+
+### Test data ###
+TestDataInit

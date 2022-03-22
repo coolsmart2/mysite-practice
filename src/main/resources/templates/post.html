@@ -4,14 +4,26 @@
     <title th:text="'MYSITE - ' + ${post.title}">Title</title>
     <meta charset="utf-8">
     <style>
-        table {
-            width: 500px;
-        }
+        /*table {*/
+        /*    width: 500px;*/
+        /*}*/
         th, td {
             text-align: center;
         }
         p {
             margin: 0;
+        }
+        /*ul {*/
+        /*    list-style: none;*/
+        /*}*/
+        .comment-tree input[type="radio"] {
+            display: none;
+        }
+        .comment-tree input[type="radio"]:not(:checked)~ul .comment-form {
+            display: none;
+        }
+        .comment-tree input[type="radio"]:not(:checked)~.comment-form {
+            display: none;
         }
     </style>
 </head>
@@ -33,17 +45,38 @@
     </th:block>
 </div>
 <hr>
-<div>
-    <form method="post">
-        <input type="text">
-        <button type="submit">댓글 쓰기</button>
+<div class="comment-tree">
+    <ul>
+        <li th:each="parentComment, commentStat : ${comments}" th:object="${parentComment}">
+            <div>
+                <b><span th:text="*{member.getLoginId()}">작성자</span></b>
+                <span style="font-size: small" th:text="*{'(' + localDateTime + ')'}">작성일</span>
+            </div>
+            <div th:text="*{content}">내용</div>
+            <input type="radio" name="comment-input" th:id="${'write-nested-comment' + commentStat.index}">
+            <label th:for="${'write-nested-comment' + commentStat.index}">대댓쓰기</label>
+            <ul>
+                <li th:each="childComment : ${parentComment.getChildComment()}" th:object="${childComment}">
+                    <div>
+                        <b><span th:text="*{member.getLoginId()}">작성자</span></b>
+                        <span style="font-size: small" th:text="*{'(' + localDateTime + ')'}">작성일</span>
+                    </div>
+                    <span th:text="*{content}">내용</span>
+                </li>
+            </ul>
+            <form method="post" class="comment-form" th:action="@{/post/{param1}/comment/{param2}(param1=${post.id}, param2=*{id})}">
+                <input type="text" th:field="${commentForm.content}">
+                <button type="submit">댓글등록</button>
+            </form>
+        </li>
+    </ul>
+    <input type="radio" name="comment-input" id="write-comment" checked>
+    <label for="write-comment">댓글쓰기</label>
+    <form method="post" class="comment-form" th:action="@{/post/{param1}/comment(param1=${post.id})}" th:object="${commentForm}">
+        <input type="text" th:field="*{content}">
+        <button type="submit">댓글등록</button>
     </form>
 </div>
-<div>이전 댓글</div>
-<div>이전 댓글</div>
-<div>이전 댓글</div>
-<div>이전 댓글</div>
-<div>이전 댓글</div>
 <hr>
 <div>
     <a th:if="${canEdit}" th:href="@{/post/{param1}/edit(param1=${post.id})}">수정</a>

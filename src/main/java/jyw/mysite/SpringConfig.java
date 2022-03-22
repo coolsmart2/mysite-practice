@@ -24,4 +24,9 @@ public class SpringConfig {
 //        return new MemoryPostRepository();
         return new H2PostRepository(em);
     }
+
+    @Bean
+    public CommentRepository commentRepository() {
+        return new H2CommentRepository(em);
+    }
 }

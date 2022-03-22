@@ -1,8 +1,11 @@
 package jyw.mysite.controller;
 
+import jyw.mysite.domain.entity.Comment;
 import jyw.mysite.domain.entity.Member;
 import jyw.mysite.domain.entity.Post;
+import jyw.mysite.domain.form.CommentForm;
 import jyw.mysite.domain.form.PostForm;
+import jyw.mysite.service.CommentService;
 import jyw.mysite.service.MemberService;
 import jyw.mysite.service.BoardService;
 import jyw.mysite.session.SessionConst;
@@ -15,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Slf4j
@@ -25,6 +29,7 @@ public class BoardController {
 
     private final MemberService memberService;
     private final BoardService postService;
+    private final CommentService commentService;
 
     @GetMapping("/write")
     public String postForm(
@@ -106,9 +111,11 @@ public class BoardController {
     public String showPost(
             @PathVariable Long postId,
             @SessionAttribute(name = SessionConst.LOGIN_MEMBER) Long memberId,
+            @ModelAttribute("commentForm") CommentForm commentForm,
             Model model
     ) {
         // 매번 화면에 사용자 정보를 이렇게 노가다로 구현해야 될까?
+        // 특정 컨트롤러 모두에 적용시킬수 있는 메서드 존재하는 듯
         Member findMember = memberService.findOneById(memberId);
         model.addAttribute("member", findMember);
 
@@ -123,6 +130,9 @@ public class BoardController {
         } else {
             model.addAttribute("canEdit", false);
         }
+
+        List<Comment> comments = commentService.getComments(findPost);
+        model.addAttribute("comments", comments);
 
         return "post";
     }
