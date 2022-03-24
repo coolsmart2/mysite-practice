@@ -1,6 +1,7 @@
 package jyw.mysite.repository;
 
 import jyw.mysite.domain.entity.Member;
+import jyw.mysite.repository.memory.MemoryMemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,8 @@
-package jyw.mysite.repository;
+package jyw.mysite.repository.memory;
 
 import jyw.mysite.domain.entity.Member;
 import jyw.mysite.domain.entity.Post;
+import jyw.mysite.repository.PostRepository;
 
 import java.util.*;
 

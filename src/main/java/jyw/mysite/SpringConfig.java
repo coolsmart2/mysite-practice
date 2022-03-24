@@ -1,6 +1,9 @@
 package jyw.mysite;
 
 import jyw.mysite.repository.*;
+import jyw.mysite.repository.h2.H2CommentRepository;
+import jyw.mysite.repository.h2.H2MemberRepository;
+import jyw.mysite.repository.h2.H2PostRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

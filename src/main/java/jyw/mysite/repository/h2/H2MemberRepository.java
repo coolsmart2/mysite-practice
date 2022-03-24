@@ -1,6 +1,7 @@
-package jyw.mysite.repository;
+package jyw.mysite.repository.h2;
 
 import jyw.mysite.domain.entity.Member;
+import jyw.mysite.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.EntityManager;
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class H2MemberRepository implements MemberRepository{
+public class H2MemberRepository implements MemberRepository {
 
     private final EntityManager em;
 

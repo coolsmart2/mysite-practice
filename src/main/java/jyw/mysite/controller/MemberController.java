@@ -64,9 +64,7 @@ public class MemberController {
     }
 
     @GetMapping("/logout")
-    public String logout(
-            HttpServletRequest request
-    ) {
+    public String logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();

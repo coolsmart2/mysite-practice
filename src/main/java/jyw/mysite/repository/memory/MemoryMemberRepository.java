@@ -1,11 +1,12 @@
-package jyw.mysite.repository;
+package jyw.mysite.repository.memory;
 
 import jyw.mysite.domain.entity.Member;
+import jyw.mysite.repository.MemberRepository;
 
 import java.util.*;
 
 //@Repository
-public class MemoryMemberRepository implements MemberRepository{
+public class MemoryMemberRepository implements MemberRepository {
 
     private final Map<Long, Member> members = new HashMap<>();
     private Long sequence = 0L;

@@ -1,8 +1,9 @@
-package jyw.mysite.repository;
+package jyw.mysite.repository.h2;
 
 import jyw.mysite.domain.entity.Comment;
 import jyw.mysite.domain.entity.Member;
 import jyw.mysite.domain.entity.Post;
+import jyw.mysite.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.EntityManager;
