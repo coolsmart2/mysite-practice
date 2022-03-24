@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -47,11 +48,6 @@ public class BoardService {
     }
 
     @Transactional
-    public int getTotalPost(int row) {
-        return postRepository.findAll().size();
-    }
-
-    @Transactional
     public void editPost(Long id, PostForm postForm) {
         Optional<Post> findPost = postRepository.findById(id);
         if (findPost.isPresent()) {
@@ -69,7 +65,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void postsToModel(Model model, int row, int page) {
+    public void setBoardPage(Model model, int row, int page) {
         List<Post> posts = postRepository.findPage(row, page);
         List<PostHome> postHomes = new ArrayList<>();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 a h시 m분");
@@ -78,5 +74,46 @@ public class BoardService {
             postHomes.add(new PostHome(post.getId(), post.getMember().getLoginId(), post.getTitle(), formatTime));
         }
         model.addAttribute("postHomes", postHomes);
+    }
+
+    @Transactional
+    public void setBoardPageIndex(Model model, int row, int page) {
+
+        // 머리 안 돌아가서 대충 짠 코드 리팩토링 필요함!!!
+        int totalPost = postRepository.findAll().size(); // 1012
+        int totalPage = totalPost / PostRepository.MAX_PAGE_INDEX
+                + (int) Math.ceil((double) (totalPost % PostRepository.MAX_PAGE_INDEX) /  PostRepository.MAX_PAGE_INDEX);
+        model.addAttribute("totalPage", totalPage); // 101
+
+        if (page > totalPage) {
+            page = totalPage;
+        } else if (page < 1) {
+            page = 1;
+        }
+        int current = (page - 1) / PostRepository.MAX_PAGE_INDEX;
+        int start = PostRepository.MAX_PAGE_INDEX * current;
+        int end = Math.min(start + PostRepository.MAX_PAGE_INDEX, totalPage);
+
+        List<Integer> pageList = new ArrayList<>();
+        for (int i = start; i < end; i++) {
+            pageList.add(i + 1);
+        }
+        model.addAttribute("pageList", pageList);
+    }
+
+    // 여기에 넣어도 될까
+    public void redirectBoardPage(
+            RedirectAttributes redirectAttributes,
+            String boardPage,
+            String boardRow
+    ) {
+        if (boardPage.equals("")) {
+            boardPage = "1";
+        }
+        if (boardRow.equals("")) {
+            boardRow = "10";
+        }
+        redirectAttributes.addAttribute("page", boardPage);
+        redirectAttributes.addAttribute("row", boardRow);
     }
 }

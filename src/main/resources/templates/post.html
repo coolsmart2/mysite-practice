@@ -64,7 +64,7 @@
                     <span th:text="*{content}">내용</span>
                 </li>
             </ul>
-            <form method="post" class="comment-form" th:action="@{/post/{param1}/comment/{param2}(param1=${post.id}, param2=*{id})}">
+            <form method="post" class="comment-form" th:action="@{/post/__${postId}__/comment/{param1}(param1=*{id})}">
                 <input type="text" th:field="${commentForm.content}">
                 <button type="submit">댓글등록</button>
             </form>
@@ -72,16 +72,16 @@
     </ul>
     <input type="radio" name="comment-input" id="write-comment" checked>
     <label for="write-comment">댓글쓰기</label>
-    <form method="post" class="comment-form" th:action="@{/post/{param1}/comment(param1=${post.id})}" th:object="${commentForm}">
+    <form method="post" class="comment-form" th:action="@{/post/__${postId}__/comment}" th:object="${commentForm}">
         <input type="text" th:field="*{content}">
         <button type="submit">댓글등록</button>
     </form>
 </div>
 <hr>
 <div>
-    <a th:if="${canEdit}" th:href="@{/post/{param1}/edit(param1=${post.id})}">수정</a>
-    <a th:if="${canEdit}" th:href="@{/post/{param1}/delete(param1=${post.id})}">삭제</a>
-    <a href="/">목록</a>
+    <a th:if="${canEdit}" th:href="@{/post/__${postId}__/edit}">수정</a>
+    <a th:if="${canEdit}" th:href="@{/post/__${postId}__/delete}">삭제</a>
+    <a href="/back">목록</a>
 </div>
 </body>
 </html>

@@ -47,7 +47,10 @@
     <div>
         <a class="page-index" th:if="${pageList.get(0) != 1}" th:text="|<<|" th:href="@{/?page=1}"></a>
         <a class="page-index" th:if="${pageList.get(0) != 1}" th:text="|<|" th:href="@{/?page={page}(page=${pageList.get(0) - 1})}"></a>
-        <a class="page-index" th:each="page : ${pageList}" th:text="${page}" th:href="@{/?page={page}(page=${page})}"></a>
+        <th:block th:each="page : ${pageList}">
+            <b th:if="${#strings.equals(page, currentPage)}"><a class="page-index" th:text="${page}" th:href="@{/?page={page}(page=${page})}"></a></b>
+            <a class="page-index" th:unless="${#strings.equals(page, currentPage)}" th:text="${page}" th:href="@{/?page={page}(page=${page})}"></a>
+        </th:block>
         <a class="page-index" th:if="${pageList.get(pageList.size() - 1) != totalPage}" th:text="|>|" th:href="@{/?page={page}(page=${pageList.get(pageList.size() - 1) + 1})}"></a>
         <a class="page-index" th:if="${pageList.get(pageList.size() - 1) != totalPage}" th:text="|>>|" th:href="@{/?page={page}(page=${totalPage})}"></a>
     </div>

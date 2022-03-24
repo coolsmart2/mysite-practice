@@ -42,9 +42,7 @@ public class CommentController {
         }
         Member findMember = memberService.findOneById(memberId);
         Post findPost = boardService.findOneById(postId);
-        Comment comment;
-        comment = new Comment(findPost, findMember, null, commentForm.getContent(), LocalDateTime.now());
-
+        Comment comment = new Comment(findPost, findMember, null, commentForm.getContent(), LocalDateTime.now());
         commentService.join(comment);
 
         return "redirect:/post/{postId}";
@@ -73,7 +71,6 @@ public class CommentController {
             Comment parentComment = commentService.findOneById(commentId);
             comment = new Comment(findPost, findMember, parentComment, commentForm.getContent(), LocalDateTime.now());
         }
-
         commentService.join(comment);
 
         return "redirect:/post/{postId}";

@@ -16,7 +16,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -28,13 +32,13 @@ import java.util.Objects;
 public class BoardController {
 
     private final MemberService memberService;
-    private final BoardService postService;
+    private final BoardService boardService;
     private final CommentService commentService;
 
     @GetMapping("/write")
     public String postForm(
+            @ModelAttribute("form") PostForm form,
             @SessionAttribute(name = SessionConst.LOGIN_MEMBER) Long memberId,
-            @ModelAttribute("form") PostForm postForm,
             Model model
     ) {
         Member findMember = memberService.findOneById(memberId);
@@ -45,12 +49,14 @@ public class BoardController {
 
     @PostMapping("/write")
     public String newPost(
-            @SessionAttribute(name = SessionConst.LOGIN_MEMBER) Long memberId,
             @Validated @ModelAttribute("form") PostForm postForm,
             BindingResult bindingResult,
-            Model model
+            @SessionAttribute(name = SessionConst.LOGIN_MEMBER) Long memberId,
+            Model model,
+            @CookieValue(name = "boardPage", required = false) String boardPage,
+            @CookieValue(name = "boardRow", required = false) String boardRow,
+            RedirectAttributes redirectAttributes
     ) {
-
         Member findMember = memberService.findOneById(memberId);
         model.addAttribute("member", findMember);
 
@@ -59,22 +65,23 @@ public class BoardController {
         }
 
         Post post = new Post(findMember, LocalDateTime.now(), postForm.getTitle(), postForm.getContent());
-        postService.join(post);
+        boardService.join(post);
 
-        return "redirect:/post/" + post.getId();
+        boardService.redirectBoardPage(redirectAttributes, boardPage, boardRow);
+        return "redirect:/post/{postId}";
     }
 
     @GetMapping("/{postId}/edit")
     public String editPostForm(
             @SessionAttribute(name = SessionConst.LOGIN_MEMBER) Long memberId,
             @PathVariable Long postId,
-            @ModelAttribute("form") PostForm postForm,
+            @ModelAttribute("form") PostForm form,
             Model model
     ) {
         Member findMember = memberService.findOneById(memberId);
         model.addAttribute("member", findMember);
 
-        Post post = postService.findOneById(postId);
+        Post post = boardService.findOneById(postId);
         if (post == null) {
             // 나중에 예외처리 페이지로 이동시킴
             return "error404";
@@ -82,36 +89,41 @@ public class BoardController {
 
         if (!Objects.equals(findMember.getId(), post.getMember().getId())) {
             // 일단 홈화면으로 리다이렉트 향후 이전페이지로 리다이렉트할 수 있도록
-            return "redirect:/";
+//            if (boardPage != null) {
+//                return "redirect:" + boardPage;
+//            }
+            return "redirect:/back";
         }
 
-        postForm.setTitle(post.getTitle());
-        postForm.setContent(post.getContent());
+
+
+        form.setTitle(post.getTitle());
+        form.setContent(post.getContent());
 
         return "postForm";
     }
 
     @PostMapping("/{postId}/edit")
     public String editPost(
-            @SessionAttribute(name = SessionConst.LOGIN_MEMBER) Long memberId,
             @PathVariable Long postId,
             @ModelAttribute("form") PostForm postForm,
+            @SessionAttribute(name = SessionConst.LOGIN_MEMBER) Long memberId,
             Model model
     ) {
 
         Member findMember = memberService.findOneById(memberId);
         model.addAttribute("member", findMember);
 
-        postService.editPost(postId, postForm);
+        boardService.editPost(postId, postForm);
 
-        return "redirect:/post/" + postId;
+        return "redirect:/post/{postId}";
     }
 
     @GetMapping("/{postId}")
     public String showPost(
             @PathVariable Long postId,
-            @SessionAttribute(name = SessionConst.LOGIN_MEMBER) Long memberId,
             @ModelAttribute("commentForm") CommentForm commentForm,
+            @SessionAttribute(name = SessionConst.LOGIN_MEMBER) Long memberId,
             Model model
     ) {
         // 매번 화면에 사용자 정보를 이렇게 노가다로 구현해야 될까?
@@ -119,7 +131,7 @@ public class BoardController {
         Member findMember = memberService.findOneById(memberId);
         model.addAttribute("member", findMember);
 
-        Post findPost = postService.findOneById(postId);
+        Post findPost = boardService.findOneById(postId);
         model.addAttribute("post", findPost);
 
         String[] contents = findPost.getContent().split("\n");
@@ -139,8 +151,10 @@ public class BoardController {
 
     // DELETE Api 사용해서 restful 하게 설계해야 하는데 이건 프론트와 api로 통신할때 해당하는 거 겠지?
     @GetMapping("/{postId}/delete")
-    public String deletePost(@PathVariable Long postId) {
-        postService.delete(postId);
-        return "redirect:/";
+    public String deletePost(
+            @PathVariable Long postId
+    ) {
+        boardService.delete(postId);
+        return "redirect:/back";
     }
 }
