@@ -53,8 +53,6 @@ public class BoardController {
             BindingResult bindingResult,
             @SessionAttribute(name = SessionConst.LOGIN_MEMBER) Long memberId,
             Model model,
-            @CookieValue(name = "boardPage", required = false) String boardPage,
-            @CookieValue(name = "boardRow", required = false) String boardRow,
             RedirectAttributes redirectAttributes
     ) {
         Member findMember = memberService.findOneById(memberId);
@@ -67,7 +65,7 @@ public class BoardController {
         Post post = new Post(findMember, LocalDateTime.now(), postForm.getTitle(), postForm.getContent());
         boardService.join(post);
 
-        boardService.redirectBoardPage(redirectAttributes, boardPage, boardRow);
+        redirectAttributes.addAttribute("postId", post.getId());
         return "redirect:/post/{postId}";
     }
 
@@ -94,8 +92,6 @@ public class BoardController {
 //            }
             return "redirect:/back";
         }
-
-
 
         form.setTitle(post.getTitle());
         form.setContent(post.getContent());
@@ -151,9 +147,7 @@ public class BoardController {
 
     // DELETE Api 사용해서 restful 하게 설계해야 하는데 이건 프론트와 api로 통신할때 해당하는 거 겠지?
     @GetMapping("/{postId}/delete")
-    public String deletePost(
-            @PathVariable Long postId
-    ) {
+    public String deletePost(@PathVariable Long postId) {
         boardService.delete(postId);
         return "redirect:/back";
     }
