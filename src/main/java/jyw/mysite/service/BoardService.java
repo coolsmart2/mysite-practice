@@ -83,7 +83,6 @@ public class BoardService {
         int totalPost = postRepository.findAll().size(); // 1012
         int totalPage = totalPost / PostRepository.MAX_PAGE_INDEX
                 + (int) Math.ceil((double) (totalPost % PostRepository.MAX_PAGE_INDEX) /  PostRepository.MAX_PAGE_INDEX);
-        model.addAttribute("totalPage", totalPage); // 101
 
         if (page > totalPage) {
             page = totalPage;
@@ -98,6 +97,13 @@ public class BoardService {
         for (int i = start; i < end; i++) {
             pageList.add(i + 1);
         }
+
+        // 게시판에 아무 글도 없을 경우 디폴트 값 입력
+        if (pageList.size() == 0) {
+            pageList.add(1);
+            totalPage = 1;
+        }
+        model.addAttribute("totalPage", totalPage); // 101
         model.addAttribute("pageList", pageList);
     }
 

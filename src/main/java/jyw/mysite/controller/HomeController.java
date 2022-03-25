@@ -51,7 +51,7 @@ public class HomeController {
         boardService.setBoardPageIndex(model, Integer.parseInt(row), Integer.parseInt(page));
 
         model.addAttribute("currentPage", page);
-        log.info("page = {}", page);
+//        log.info("page = {}", page);
 
         if (memberId == null) {
             return "home";
