@@ -12,7 +12,8 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginInterceptor())
                 .order(1)
-                .addPathPatterns("/**")
+                .addPathPatterns(UrlConst.REDIRECT_URL) // 여기에 mysite 에 해당되는 모든 url 넣기, 그래야지 이상한 url에 대해 오류페이지 실행 가능
+//                .addPathPatterns("/**") // 여기에 mysite 에 해당되는 모든 url 넣기, 그래야지 이상한 url에 대해 오류페이지 실행 가능
                 .excludePathPatterns("/css/**", "/*.ico", "/error", "/", "/login", "/sign-up", "/back");
     }
 }

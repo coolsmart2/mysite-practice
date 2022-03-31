@@ -128,6 +128,9 @@ public class BoardController {
         model.addAttribute("member", findMember);
 
         Post findPost = boardService.findOneById(postId);
+        if (findPost == null) {
+            return "redirect:/back";
+        }
         model.addAttribute("post", findPost);
 
         String[] contents = findPost.getContent().split("\n");

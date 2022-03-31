@@ -30,7 +30,7 @@ public class TestDataInit {
         Member member2 = new Member("test2", "1111!");
         memberService.join(member2);
 
-        for (int i = 0; i < 0; i++) {
+        for (int i = 0; i < 5; i++) {
             postService.join(new Post(member1, LocalDateTime.now(), "Hello " + i, "Woooooooooorld!"));
         }
 
